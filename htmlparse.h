@@ -10,8 +10,10 @@
 #include <QPointer>
 #include "slotscls.h"
 #include "pipecls.h"
+#include "itemmodel.h"
 
 class WebScraper;  // 仅前置声明
+class Item;
 
 // 封装 libxml2 文档的 RAII 资源管理类
 class XmlDocument {
@@ -54,7 +56,7 @@ public:
     QUrl getHref(xmlNodePtr aNode);
     
     // 获取a元素的文本内容
-    QList<QString> getAcontent(QList<xmlNodePtr> &aNodeList);
+    QList<Item> getAcontent(QList<xmlNodePtr> &aNodeList);
     
     // 获取a元素的文本内容 返回
     void printNodeContent(xmlNodePtr node) const;

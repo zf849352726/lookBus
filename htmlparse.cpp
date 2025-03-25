@@ -246,8 +246,8 @@ QUrl HtmlParser::getHref(xmlNodePtr aNode) {
     return QUrl();
 }
 
-QList<QString> HtmlParser::getAcontent(QList<xmlNodePtr> &aNodeList) {
-    QList<QString> resultList;
+QList<Item> HtmlParser::getAcontent(QList<xmlNodePtr> &aNodeList) {
+    QList<Item> resultList;
 
     // 遍历所有传入的 <a> 标签节点
     for (xmlNodePtr aNode : aNodeList) {
@@ -262,7 +262,7 @@ QList<QString> HtmlParser::getAcontent(QList<xmlNodePtr> &aNodeList) {
         xmlChar *content = xmlNodeGetContent(aNode);
         if (content) {
             // 将内容转换为 QString 并加入到结果列表
-            resultList.append(QString::fromUtf8(reinterpret_cast<const char*>(content)));
+            resultList.append(Item(QString::fromUtf8(reinterpret_cast<const char*>(content))));
             xmlFree(content);  // 释放内存
         }
     }

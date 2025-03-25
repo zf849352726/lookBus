@@ -2,10 +2,22 @@
 // seeBus
 
 #include "webscraper.h"
+#include <QThread>
+
+
+//WebScraper::WebScraper() {}
 
 // WebScraper.cpp 中的构造函数
 WebScraper::WebScraper(QObject *parent)
-    : QObject(parent), manager(new QNetworkAccessManager(this)), htmlparse(new HtmlParser(this)), pipe(new PipeCls(this)) {
+: QObject(parent), manager(new QNetworkAccessManager(this)), htmlparse(new HtmlParser(this)), pipe(new PipeCls(this)), hotModel(new ItemModel(this)) {
+}
+
+//WebScraper:: WebScraper(QSharedPointer<ItemModel> model){
+//    this->model = model;
+//}
+
+ItemModel *WebScraper:: getModel(){
+    return this->hotModel;
 }
 
 PipeCls *WebScraper:: getPipeObj(){
@@ -115,8 +127,9 @@ void WebScraper::parseForum(const QByteArray &data) {
 void WebScraper::parseForumJp(const QByteArray &data) {
     QList <xmlNodePtr> aElements = htmlparse->getElementsByClass("s");
     // 获取主题
-    *(this->pipe->geThemeListPointer()) = htmlparse->getAcontent(aElements);
-    this->pipe->getModelObj()->setStringList(*(this->pipe->geThemeListPointer()));
+    
+    QList<Item> items = htmlparse->getAcontent(aElements);
+    this->hotModel->setDataFromList(items);
     nextUrl = htmlparse->getHref(aElements[0]);
     
     // 获取当前 URL 的字符串表示
@@ -143,7 +156,6 @@ void WebScraper::parseForumJp(const QByteArray &data) {
 void WebScraper::parseForumDetail(const QByteArray &data) {
     QList<xmlNodePtr> divElements = htmlparse->getElementsByClass("t_fsz");
     QList<xmlNodePtr> tdElements = htmlparse->findNodesByTag(divElements, "td", true);
-    
     nextUrl = QUrl();
     // 获取当前 URL 的字符串表示
     QString currentUrlStr = nextUrl.toString();
@@ -163,4 +175,5 @@ void WebScraper::parseForumDetail(const QByteArray &data) {
     } else {
         qDebug() << "No next page found, stopping.";
     }
+//    qDebug() << "hotModel 行数：" << this->getModel()->rowCount();
 }

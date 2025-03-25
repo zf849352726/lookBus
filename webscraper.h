@@ -24,15 +24,21 @@
 #include <libxml/HTMLparser.h>
 #include "htmlparse.h"
 #include "pipecls.h"
+#include "itemmodel.h"
 
 class HtmlParser;
+class ItemModel;
 
 class WebScraper : public QObject
 {
     Q_OBJECT
     
 public:
+//    WebScraper();
     explicit WebScraper(QObject *parent = nullptr);
+    
+//    explicit WebScraper(QSharedPointer<ItemModel> model);
+    ItemModel *getModel();
 
     // 发起请求，传递解析函数
     void fetchData(const QUrl &url, std::function<void(const QByteArray&)> parseFunction = nullptr);
@@ -54,6 +60,7 @@ private:
     HtmlParser *htmlparse;
     QUrl nextUrl;
     PipeCls *pipe;
+    ItemModel *hotModel;
     
 };
 

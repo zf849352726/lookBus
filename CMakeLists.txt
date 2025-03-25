@@ -4,7 +4,13 @@ project(loveBus VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick QuickControls2)
+find_package(Qt6 REQUIRED COMPONENTS Quick QuickControls2 Core)
+find_package(LibXml2 REQUIRED)  # 查找 libxml2
+
+# 确保 libxml2 已找到
+if (NOT LIBXML2_FOUND)
+    message(FATAL_ERROR "libxml2 not found!")
+endif()
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -18,6 +24,8 @@ qt_add_executable(apploveBus
     slotscls.h
     webscraper.cpp
     webscraper.h
+    itemmodel.cpp
+    itemmodel.h
 )
 
 qt_add_qml_module(apploveBus
@@ -41,6 +49,8 @@ set_target_properties(apploveBus PROPERTIES
 target_link_libraries(apploveBus
     PRIVATE Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Core
+    ${LIBXML2_LIBRARIES}  # 链接 libxml2 库
 )
 
 include(GNUInstallDirs)
@@ -55,5 +65,8 @@ file(GLOB_RECURSE HEADERS "include/*.h")  # 假设你的头文件在 include 目
 # 为头文件设置虚拟目录
 source_group("Header Files" FILES ${HEADERS})
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
+target_include_directories(apploveBus
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/include
+        ${LIBXML2_INCLUDE_DIR}
+)

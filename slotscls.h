@@ -20,14 +20,14 @@ class SlotsCls : public QObject {
 public:
     explicit SlotsCls(QObject *parent = nullptr);
     ~SlotsCls();
-    void setMainWindow(MainWindow *mainWindow); // 设置MainWindow指针
     
-    void listViewShow();
 public slots:
-    void on_latest_clicked();
+    void on_hottest_clicked();
+    
+signals:
+    void slotFinished();  // 定义一个信号，当槽函数执行完毕时发出
     
 private:
     WebScraper *scraper;
-    MainWindow *m_mainWindow; // 保存MainWindow指针
 };
 

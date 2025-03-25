@@ -56,6 +56,10 @@ Window {
             id: button1
             width: 95
             text: qsTr("最热")
+            onClicked: {
+                slotscls.on_hottest_clicked()
+            }
+            
         }
 
         Button {
@@ -74,46 +78,31 @@ Window {
     Column {
         id: column
         y: 80
-        width: 200
+        width: parent.width
         height: 640
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.horizontalCenter: parent.horizontalCenter
 
         ListView {
             id: listView
-            anchors.fill: parent
-            model: ListModel {
-                ListElement {
-                    name: "Red"
-                    colorCode: "red"
-                }
+            width: parent.width
+            height: parent.height
+            model: hotModel
+            delegate: Item {
+                width: listView.width
+                height: 50
 
-                ListElement {
-                    name: "Green"
-                    colorCode: "green"
-                }
+                Row {
+                    spacing: 5
+                    Rectangle {
+                        width: 100
+                        height: 20
+                        color: colorCode
+                    }
 
-                ListElement {
-                    name: "Blue"
-                    colorCode: "blue"
-                }
-
-                ListElement {
-                    name: "White"
-                    colorCode: "white"
-                }
-            }
-            delegate: Row {
-                spacing: 5
-                Rectangle {
-                    width: 100
-                    height: 20
-                    color: colorCode
-                }
-
-                Text {
-                    width: 100
-                    text: name
+                    Text {
+                        width: 100
+                        text: model.name
+                    }
                 }
             }
         }
@@ -189,3 +178,4 @@ Window {
     }
 
 }
+
